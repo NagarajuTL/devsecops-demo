@@ -108,10 +108,11 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=sha,format=long
-            type=ref,event=branch
-            latest
-            main
+              type=sha,format=long
+              type=ref,event=branch
+              latest
+              type=raw,value=main,enable={{is_default_branch}}
+
       
       - name: Build Docker image
         uses: docker/build-push-action@v5
