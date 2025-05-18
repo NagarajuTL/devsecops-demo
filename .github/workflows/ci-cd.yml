@@ -108,20 +108,26 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-              type=sha,format=long
-              type=ref,event=branch
-              latest
-              type=raw,value=main,enable={{is_default_branch}}
-
+            type=sha,format=long
+            type=ref,event=branch
+            latest
       
       - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: false
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          load: true
+      
+      - name: Push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          load: true
       
       - name: Set image tag output
         id: set_output
